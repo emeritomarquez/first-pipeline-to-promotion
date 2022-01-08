@@ -184,11 +184,6 @@ jobs:
             --parameter-overrides MyBucketName="mybucket-${CIRCLE_WORKFLOW_ID:0:7}"
       - run: aws s3 sync . s3://mybucket-${CIRCLE_WORKFLOW_ID:0:7} --delete
 
-# Uncomment the step above if yoou wish to upload all contents of the current directory to the S3 bucket
-
-  # Exercise: Promote to Production - Job 2
-  # Fetch and save the pipeline ID (bucket ID) responsible for the last release.
-
   get_last_deployment_id:
     docker:
       - image: amazon/aws-cli
@@ -205,6 +200,29 @@ jobs:
           root: ~/
           paths:
             - textfile.txt
+
+
+# Uncomment the step above if yoou wish to upload all contents of the current directory to the S3 bucket
+
+  # Exercise: Promote to Production - Job 2
+  # Fetch and save the pipeline ID (bucket ID) responsible for the last release.
+
+#  get_last_deployment_id:
+#    docker:
+#      - image: amazon/aws-cli
+#    steps:
+#      - checkout
+#      - run: yum install -y tar gzip
+#      - run:
+#          name: Fetch and save the old pipeline ID (bucket name) responsible for the last release.
+#          command: |
+#            aws cloudformation \
+#            list-exports --query "Exports[?Name==\`PipelineID\`].Value" \
+#            --no-paginate --output text > ~/textfile.txt
+#      - persist_to_workspace:
+#          root: ~/
+#          paths:
+#            - textfile.txt
 
 #          paths:
 #            - textfile.txt
@@ -282,7 +300,9 @@ workflows:
       - create_and_deploy_front_end:
           requires:
             - smoke_test
-      - get_last_deployment_id
+      - get_last_deployment_id:
+          requires:
+            create_and_deploy_front_end
 
 #      - promote_to_production:
 #          requires:
