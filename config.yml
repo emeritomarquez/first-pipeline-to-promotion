@@ -173,7 +173,6 @@ jobs:
     docker:
       - image: amazon/aws-cli
     steps:
-      - checkout
       - run:
           name: Execute bucket.yml - Create Cloudformation Stack
           command: |
@@ -182,7 +181,7 @@ jobs:
             --stack-name stack-create-bucket-${CIRCLE_WORKFLOW_ID:0:7} \
             --parameter-overrides MyBucketName="mybucket-${CIRCLE_WORKFLOW_ID:0:7}"
        - run: aws s3 sync . s3://mybucket-${CIRCLE_WORKFLOW_ID:0:7} --delete
-            # Uncomment the step above if yoou wish to upload all contents of the current directory to the S3 bucket
+# Uncomment the step above if yoou wish to upload all contents of the current directory to the S3 bucket
 
   # Exercise: Promote to Production - Job 2
   # Fetch and save the pipeline ID (bucket ID) responsible for the last release.
