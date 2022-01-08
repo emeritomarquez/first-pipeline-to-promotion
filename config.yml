@@ -124,7 +124,6 @@ jobs:
       - run:
           name: Configure server
           command: |
-            sleep 5
             ansible-playbook -i inventory.txt main4.yml
 
   # Exercise: Smoke Testing
@@ -277,7 +276,7 @@ workflows:
       - smoke_test:
           requires:
             - configure_infrastructure
-        #      - create_and_deploy_front_end
+      - create_and_deploy_front_end
 #      - promote_to_production:
 #          requires:
 #            - create_and_deploy_front_end
